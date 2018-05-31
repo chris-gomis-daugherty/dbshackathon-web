@@ -1,21 +1,30 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title></title>
+  <title>The Site</title>
+  <link rel="stylesheet" href="css/main.css">
   <script src="javascript/user.js"></script>
   <script src="javascript/util.js"></script>
 </head>
 <body>
+  <div id="dv-header">
+    <div id="dv-tagline">Something here</div>
+    <div id="dv-logout"></div>
+  </div>
   <div id="dv-form">
     <form onsubmit="doLogin();return false;" name="login" id="frm-login">
-      <label>username: </label><input id="username" type="text" placeholder="enter username">
-      <label>password: </label><input id="password" type="password" placeholder="enter password">
-      <input type="submit" value="login">
-      <input type="reset" value="reset">
+      <label class="frm_labels" id="lbl_username">username: </label><input class="frm_inptText" id="username" type="text" placeholder="email" value="test@email.com">
+      <label class="frm_labels" id="lbl_password">password: </label><input class="frm_passField" id="password" type="password" placeholder="password" value="password">
+      <input class="frm_submit_btn" id="frm_submit" type="submit" value="login">
+      <input class="frm_reset_btn" id="frm_reset" type="reset" value="reset">
     </form>
   </div>
   <div id="dv-forgot">
     <a id="a-forgot" href="">forgot password</a>
+  </div>
+
+  <div id="dv-register">
+    <a id="a-register" href="register.html">register</a>
   </div>
 </body>
 </html>

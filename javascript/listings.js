@@ -4,20 +4,31 @@ let fillListings = function(data) {
   let i;
   let divList = document.createElement('div');
 
+  let createSpan = function(data,appendTo) {
+    let lSpan = document.createElement('span',);
+    lSpan.className ="listSpan";
+    lSpan.innerHTML = data;
+    appendTo.appendChild(lSpan);
+  };
+
   for(i = 0; i < loopLen; i++) {
-    let lspan = document.createElement('span');
-    lspan.innerHTML = data[i].name;
-    divList.appendElement(lspan);
+    let lDiv = document.createElement('div');
+    createSpan(data[i].id, lDiv);
+    createSpan(data[i].name, lDiv);
+    createSpan(data[i].votes, lDiv);
+    createSpan(data[i].description, lDiv);
+    divList.append(lDiv);
   }
-  document.getElementById('div-listings').appendElement(divList);
+  document.getElementById('div-listings').appendChild(divList);
 };
 
 let Listing = (function() {
   let listingProto = {
-    getListings: function() {
+    getListings: function(userID) {
       //action, url, payload, callback
       console.log("calling get list");
-      callServer("GET","topics","",fillListings);
+      let header = { "USER_ID": userID };
+      callServer("GET","topics",header,"",fillListings);
     },
     authenticate: function() {
       return "Goodbye, " + this.firstName;
@@ -30,7 +41,6 @@ let Listing = (function() {
     this.description = description;
     this.votes = votes;
   };
-
   theListing.prototype = listingProto;
 
   return theListing;
@@ -39,6 +49,7 @@ let Listing = (function() {
 let theList = new Listing();
 
 function startListingPage() {
-  console.log("starting listpage");
-  theList.getListings();
+  let userID = sessionStorage.getItem("userId");
+  console.log("starting listpage, user: "+ userID);
+  theList.getListings(userID);
 }

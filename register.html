@@ -1,16 +1,23 @@
 <html>
 <head>
-  <title></title>
+  <meta charset="utf-8">
+  <title>Registration</title>
+  <link rel="stylesheet" href="css/main.css">
+  <script src="javascript/util.js"></script>
+  <script src="javascript/user.js"></script>
 </head>
 <body>
   <div id="dv-form">
-    <form name="login" id="frm-login">
-      <label>username: </label><input id="username" type="text" placeholder="enter username">
-      <label>password: </label><input id="password" type="password" placeholder="enter password">
-      <label>repeat password: </label><input id="rpt-password" type="password" placeholder="enter password">
-      <input type="submit" value="login">
-      <input type="reset" value="reset">
+    <form onsubmit="doRegister();return false;" name="login" id="frm-login">
+      <label class="frm_labels" id="lbl_username">username: </label><input class="frm_inptText" id="username" type="text" placeholder="email" value="tester@email.com">
+      <label class="frm_labels" id="lbl_password1">password: </label><input class="frm_passField" id="password" type="password" placeholder="password" value="Pass1word">
+      <label class="frm_labels" id="lbl_password2">repeat password: </label><input class="frm_passField" id="rpt-password" type="password" placeholder="repeat password" value="Pass1word">
+      <label class="frm_labels" id="lbl_firstName">first name: </label><input class="frm_inptText" id="firstName" type="text" placeholder="first name" value="John">
+      <label class="frm_labels" id="lbl_lastName">last name: </label><input class="frm_inptText" id="lastName" type="text" placeholder="last name" value="Doe">
+      <input class="frm_submit_btn" id="frm_submit" type="submit" value="register">
+      <input class="frm_reset_btn" id="frm_reset" type="reset" value="reset">
     </form>
   </div>
+  <div><a href="index.html">cancel</a></div>
 </body>
 </html>

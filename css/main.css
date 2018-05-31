@@ -1,0 +1,26 @@
+body {
+  font-family: sans-serif;
+}
+
+.listSpan {
+  padding: 1px 5px;
+}
+
+.errorMsg {
+  padding: 1px 5px;
+  background-color: lightgreen;
+  color: red;
+}
+#dv-header {
+  height: 20px;
+}
+#dv-tagline {
+  float: left;
+}
+#dv-logout {
+  float: right;
+}
+#dv-form {
+  clear: both;
+  margin-top: 10px;
+}
