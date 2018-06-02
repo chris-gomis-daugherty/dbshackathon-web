@@ -5,13 +5,11 @@ let callServer = function(action, url, headers, payload, callback) {
   let sendurl = "/api/" + url;
   let response;
 
-  //console.log(action + " " + url + " " + payload )
-
   jsonhttp.onreadystatechange = function() {
     if (this.readyState == XMLHttpRequest.DONE) {
       if (this.status == 200 || this.status == 400) {
         response = JSON.parse(this.responseText);
-        callback(response);
+        callback(response,this.status);
       } else {
         console.log("status: " + this.status + " error: " + this.responseText);
       }
@@ -19,7 +17,7 @@ let callServer = function(action, url, headers, payload, callback) {
   };
 
   jsonhttp.open(action, sendurl, true);
-  if (action == ("POST")) {
+  if (action == ("POST") || action == ("PUT")) {
     jsonhttp.setRequestHeader("Content-Type", "application/json");
   }
   if (headers != "" ) {
@@ -73,4 +71,26 @@ let clbkLogout = function(response) {
   console.log(response);
   sessionStorage.clear();
   window.location.href = "/jsathon";
+};
+
+let createElem = function(data, tag, appendTo, attributes) {
+  let elem = document.createElement(tag);
+  elem.innerHTML = data;
+  if (attributes != null || attributes != "") {
+    for (let attribute in attributes) {
+      let attr = attribute;
+      let attrVal = attributes[attr];
+      if (attr == "href") {
+        elem.href = attrVal;
+      } else {
+        elem.setAttribute(attr,attrVal);
+      }
+    }
+  }
+  appendTo.appendChild(elem);
+  return elem;
+};
+
+let loadingSpinner = function(state) {
+
 };

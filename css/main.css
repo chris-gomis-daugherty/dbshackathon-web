@@ -1,15 +1,32 @@
 body {
   font-family: sans-serif;
 }
-
+span {
+  margin: 2px 5px;
+}
 .listSpan {
   padding: 1px 5px;
 }
-
 .errorMsg {
   padding: 1px 5px;
   background-color: lightgreen;
   color: red;
+}
+.spn_spacer {
+  width: 20px;
+}
+.spn_comment {
+  margin: 2px 10px;
+}
+.spn_update_link {
+  margin: 2px 20px;
+  text-align: right;
+}
+.voteBtn {
+  text-decoration: none;
+}
+#dv-topic-vote {
+  display: inline;
 }
 #dv-header {
   height: 20px;
@@ -23,4 +40,7 @@ body {
 #dv-form {
   clear: both;
   margin-top: 10px;
+}
+#dv-new-listing, #dv-new-comment {
+  visibility: hidden;
 }
