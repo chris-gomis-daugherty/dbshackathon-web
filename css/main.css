@@ -41,6 +41,9 @@ span {
   clear: both;
   margin-top: 10px;
 }
-#dv-new-listing, #dv-new-comment {
+#dv-new-listing, #dv-new-comment, #dv-user-update {
   visibility: hidden;
+}
+#dv-edit-topic, #a-edit-topic-message, #dv-user-form {
+  display: none;
 }

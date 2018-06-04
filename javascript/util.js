@@ -28,16 +28,15 @@ let callServer = function(action, url, headers, payload, callback) {
     }
   }
   jsonhttp.send(payload);
+
 };
 
-let showError = function(message,elem) {
+let showError = function(message) {
   let errormsg = document.getElementById('div-error-message');
   if (!errormsg) {
-    let errormsg = document.createElement('div');
-    errormsg.id = "div-error-message";
-    errormsg.className = 'errorMsg';
+    let attr = { "id": "div-error-message" }
+    let errormsg = document.createElem("message","div","body",attr);
     errormsg.innerHTML = message;
-    elem.append(errormsg);
   } else {
     errormsg.innerHTML = message;
   }
@@ -91,6 +90,14 @@ let createElem = function(data, tag, appendTo, attributes) {
   return elem;
 };
 
-let loadingSpinner = function(state) {
-
+let arrayPushIfUnique = function(theArray, value) {
+  if (theArray.length > 0) {
+    let idx = theArray.indexOf(value);
+    if ( idx == -1 ) {
+      theArray.push(value);
+    }
+  } else {
+    theArray.push(value);
+  }
+  return theArray;
 };

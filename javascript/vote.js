@@ -12,7 +12,7 @@ let submitVote = function(event) {
   let elem = event.target;
   let topicId = elem.getAttribute("data-topicId");
   sessionStorage.setItem("voteId", topicId);
-  let header = { "USER_ID": loggedInUserId };
+  let header = { "USER_ID": g_loggedInUserId };
   let url = "topics/"+topicId+"/vote";
   callServer("GET",url,header,"",callback);
   event.preventDefault();

@@ -2,12 +2,10 @@
 let Listing = (function() {
   let listingProto = {
     getListings: function(userID) {
-      console.log("calling get list");
       let header = { "USER_ID": userID };
       callServer("GET","topics",header,"",this.clbkGetListings);
     },
     clbkGetListings: function(data) {
-      console.log("made callback");
       let i; let loopLen = data.length;
       let divList = document.getElementById('dv-listings');
       for(i = 0; i < loopLen; i++) { addListing(data[i],divList); }
@@ -43,8 +41,8 @@ let theList = new Listing();
 
 /* view controller related js */
 function startListingPage() {
-  console.log("starting listpage, user: "+ loggedInUserId);
-  theList.getListings(loggedInUserId);
+  console.log("starting listpage, user: " + g_loggedInUserId);
+  theList.getListings(g_loggedInUserId);
 }
 
 function addListing(data,elem) {
