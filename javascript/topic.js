@@ -73,7 +73,7 @@ function startTopicPage() {
   let topicID = url.searchParams.get("topicid");
   pageTopic = new Topic(topicID);
   pageTopic.getTopic(userID);
-  let submitBtn = document.getElementById("frm-submit");
+  let submitBtn = document.getElementById("frm-comment-submit");
   submitBtn.addEventListener("click", doNewComment);
   submitEvent = "new";
 
@@ -92,8 +92,9 @@ function startTopicPage() {
 let addComment = function(comment,elem, userName) {
   let lDiv = document.createElement('div');
   lDiv.id = "dv-comment-id-"+comment.id;
+  lDiv.setAttribute("class", "commmentGrid");
 
-  let attr = { "class": "user_comment", "data-user-id": comment.userId };
+  let attr = { "class": "commenter_name", "data-user-id": comment.userId };
   let tmpName = userName || comment.userId;
   let nameElem = createElem(tmpName, "div", lDiv, attr);
   nameElem.addEventListener("click", goToUserPage);
@@ -101,16 +102,18 @@ let addComment = function(comment,elem, userName) {
   commenterIdList = arrayPushIfUnique(commenterIdList, tempUserID );
 
   createElem(comment.id, "span", lDiv);
-  let comElem = createElem(comment.message, "span", lDiv, {"class":"spn_comment"});
+  let comElem = createElem(comment.message, "div", lDiv, {"class":"dv_comment"});
   comElem.id = "comment-id-"+comment.id;
 
   // update & delete should only display for original creator
   if (comment.userId == g_loggedInUserId) {
-    let attr = { "href": "", "class": "spn_update_link", "data-id": comment.id };
-    let updElem = createElem("update", "a", lDiv, attr);
+    let attr = {"class": "dv_update_delete"};
+    let divElem = createElem("", "div", lDiv, attr);
+    attr = { "href": "", "class": "spn_update_link", "data-id": comment.id };
+    let updElem = createElem("update", "a", divElem, attr);
     updElem.addEventListener("click", prepUpdateComment);
     attr = { "href": "", "class": "spn_delete_link", "data-id": comment.id };
-    let delElem = createElem("delete", "a", lDiv, attr);
+    let delElem = createElem("delete", "a", divElem, attr);
     delElem.addEventListener("click", deleteComment);
   }
   elem.append(lDiv);
@@ -120,7 +123,7 @@ let setupTopic = function(topic) {
   console.log("made callback");
   let titleDiv = document.getElementById('dv-topic-title');
   let voteDiv = document.getElementById('dv-topic-vote');
-  let voteBtn = document.getElementById("dv-topic-vote-btn");
+  let voteBtn = document.getElementById("a-topic-vote-btn");
   voteBtn.setAttribute("data-topicId",pageTopic.id);
   voteBtn.addEventListener("click",submitVote);
   let descDiv = document.getElementById('dv-topic-desc');
@@ -149,7 +152,7 @@ function cancelNewCommentForm() {
   let newCommentForm = document.getElementById('frm-new-comment');
   newCommentForm.reset();
   let commentMessage = document.getElementById('npt-comment');
-  let submitBtn = document.getElementById("frm-submit");
+  let submitBtn = document.getElementById("frm-comment-submit");
   submitBtn.value = "create";
   commentMessage.innerHTML = "";
   createLink.style.visibility = "visible";
@@ -192,7 +195,7 @@ function prepUpdateComment(event) {
   let commentElem = document.getElementById("comment-id-"+id);
   let commentBox = document.getElementById("npt-comment");
   commentBox.innerHTML = commentElem.innerHTML;
-  let submitBtn = document.getElementById("frm-submit");
+  let submitBtn = document.getElementById("frm-comment-submit");
   submitBtn.value = "update";
   if (submitEvent === "new") {
     submitBtn.removeEventListener("click", doNewComment);
@@ -277,7 +280,7 @@ let clbksupplyUserInfo = function(response, status) {
 
 let finishedUserList = function() {
   let commentDiv = document.getElementById("dv-comment-box");
-  let commentDivList = commentDiv.querySelectorAll("div.user_comment");
+  let commentDivList = commentDiv.querySelectorAll("div.commenter_name");
   let loopLen = commentDivList.length;
   for (let i=0; i < loopLen; i++) {
     let elem = commentDivList[i];

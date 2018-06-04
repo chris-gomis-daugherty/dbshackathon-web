@@ -12,35 +12,36 @@
   <script src="javascript/vote.js"></script>
 </head>
 <body onload="startTopicPage();">
-  <div id="dv-header">
-    <div id="dv-tagline"><a href="listing.html">Something here</a></div>
-    <div id="dv-logout"><a href="" id="a-logout" onclick="logout(); return false;">logout</a></div>
-  </div>
-  <div id="dv-topic-header">
-    <div id="dv-topic-title"></div>
-    <div id="dv-topic-vote"></div><a href="" class="voteBtn" id="dv-topic-vote-btn">+</a>
-  </div>
-  <div id="dv-topic-desc"></div>
-  <a href="" id="a-edit-topic-message">Edit<a>
-  <div id="dv-edit-topic">
-    <textarea id="ta-topic-message" rows="3" cols="60"></textarea>
-    <input class="frm_submit_btn" id="frm-topic-submit" type="submit" value="update">
-    <input class="frm_cancel_btn" id="frm-topic-cancel" type="button" value="cancel" onclick="cancelUpdateTopic);">
-  </div>
-  <div id="dv-topic-footer"></div>
-  <div id="dv-comments-header">Comments</div>
-  <div id="dv-comment-box">
-  </div>
-  <div id="dv-comment-create">
-    <a href="" onclick="showNewCommentForm();return false;">Create Comments</a>
-  </div>
-  <div id="dv-new-comment">
-    <form name="newComment" id="frm-new-comment">
+  <form id="frm-new-comment">
+  <div class="aGrid" id="topic-page">
+    <div class="aGrid" id="dv-header">
+      <div id="dv-tagline"><a href="listing.html">vanilla javascript historia</a></div>
+      <div id="dv-logout"><a href="" id="a-logout" onclick="logout(); return false;">logout</a></div>
+    </div>
+    <div class="aGrid" id="dv-topic">
+      <div id="dv-topic-title"></div>
+      <div id="dv-topic-vote"></div>
+      <a href="" class="voteBtn" id="a-topic-vote-btn">+</a>
+      <div class="dv_topic_desc" id="dv-topic-desc"></div>
+    </div>
+    <a href="" id="a-edit-topic-message">Edit</a>
+    <div class="aGrid" id="dv-edit-topic">
+      <textarea id="ta-topic-message" rows="3" cols="60"></textarea>
+      <input class="frm_submit_btn" id="frm-topic-submit" type="submit" value="update">
+      <input class="frm_cancel_btn" id="frm-topic-cancel" type="button" value="cancel" onclick="cancelUpdateTopic();">
+    </div>
+    <div id="dv-comments-header">Comments</div>
+    <div id="dv-comment-box"></div>
+    <div id="dv-comment-create">
+      <a href="" onclick="showNewCommentForm();return false;">Create Comments</a>
+    </div>
+    <div class="aGrid" id="dv-new-comment">
       <textarea class="frm_inptTextArea" id="npt-comment" placeholder="comment" rows="3" cols="60"></textarea>
-      <input class="frm_submit_btn" id="frm-submit" type="submit" value="create">
-      <input class="frm_cancel_btn" id="frm-cancel" type="button" value="cancel" onclick="cancelNewCommentForm();">
-    </form>
+      <input class="frm_submit_btn" id="frm-comment-submit" type="submit" value="create">
+      <input class="frm_cancel_btn" id="frm-comment-cancel" type="button" value="cancel" onclick="cancelNewCommentForm();">
+    </div>
+    <div id="dv-comments-footer"></div>
   </div>
-  <div id="dv-comments-footer"></div>
+  </form>
 </body>
 </html>

@@ -43,30 +43,38 @@ let theList = new Listing();
 function startListingPage() {
   console.log("starting listpage, user: " + g_loggedInUserId);
   theList.getListings(g_loggedInUserId);
+  let cancelBtn = document.getElementById("frm-listing-cancel");
+  cancelBtn.addEventListener("click",  cancelNewListingForm);
+  let submitBtn = document.getElementById("frm-listing-submit");
+  submitBtn.addEventListener("click", doNewListing);
 }
 
 function addListing(data,elem) {
   let lDiv = document.createElement('div');
-  createElem(data.id, "span", lDiv);
-  let attr = { "href": "topic.html?topicid=" + data.id}
+  lDiv.setAttribute("class", "dv-topic");
+  let attr = { "class": "spn_topic_id" };
+  createElem(data.id, "span", lDiv, attr);
+  attr = { "href": "topic.html?topicid=" + data.id, "class": "a_topic_link" };
   createElem(data.name, "a", lDiv, attr);
-  attr = { "id": "listing-vote-topic-"+ data.id };
+  attr = { "id": "listing-vote-topic-"+ data.id, "class": "spn_topic_votes" };
   createElem(data.votes, "span", lDiv, attr);
   // vote button
   attr = { "href": "", "data-topicId": data.id, "class": "voteBtn"};
   let voteElem = createElem("+", "a", lDiv, attr);
   voteElem.addEventListener("click",submitVote);
-
-  createElem(data.description, "div", lDiv);
+  attr = { "class": "dv_topic_desc" };
+  createElem(data.description, "div", lDiv, attr);
   elem.append(lDiv);
 }
 
-function doNewListing() {
+function doNewListing(event) {
   let topicName = document.getElementById('npt-topic-name').value;
   let topicDesc = document.getElementById('npt-topic-desc').value;
   let newTopic = new Topic(0, topicName, topicDesc, 0);
   let userID = sessionStorage.getItem("userId");
   newTopic.createTopic(userID, finishCreateListing);
+  event.preventDefault();
+  return false;
 }
 
 function finishCreateListing(response,resCode) {

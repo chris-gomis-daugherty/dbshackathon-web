@@ -8,28 +8,31 @@
   <script src="javascript/util.js"></script>
 </head>
 <body onload="startUserPage();">
-  <div id="dv-header">
-    <div id="dv-tagline"><a href="listing.html">Something here</a></div>
+  <form id="frm-user-update">
+  <div class="aGrid" id="user-page">
+  <div class="aGrid" id="dv-header">
+    <div id="dv-tagline"><a href="listing.html">vanilla javascript historia</a></div>
     <div id="dv-logout"><a href="" id="a-logout" onclick="logout(); return false;">logout</a></div>
   </div>
-  <div id="dv-user-info">
+  <div class="aGrid" id="dv-user-info">
     <div id="dv-user-id"></div>
-    <div id="dv-user-email"></div>
-    <div id="dv-user-firstName"></div>
-    <div id="dv-user-lastName"></div>
-    <div id="dv-user-update">
-      <a href="" id="a-user-update">update</a>
-    </div>
+    <label class="frm_labels" id="lbl-email-dsp">email: </label><div class="can_update" id="dv-user-email"></div>
+    <label class="frm_labels" id="lbl-firstname-dsp">first name: </label><div class="can_update" id="dv-user-firstName"></div>
+    <label class="frm_labels" id="lbl-lastname-dsp">last name: </label><div class="can_update" id="dv-user-lastName"></div>
+    <a href="" id="a-user-update">update</a>
   </div>
-  <div id="dv-user-form">
-    <form id="frm-user-update">
-      <input type="text" id="npt-user-email" value="" placeholder="email">
-      <input type="text" id="npt-user-firstName" value="" placeholder="first name">
-      <input type="text" id="npt-user-lastName" value="" placeholder="last name">
+  <div class="aGrid" id="dv-user-form">
+      <label class="frm_labels" id="lbl-email-edt">email: </label>
+        <input type="text" id="npt-user-email" value="" placeholder="email">
+      <label class="frm_labels" id="lbl-firstname-edt">first name: </label>
+        <input type="text" id="npt-user-firstName" value="" placeholder="first name">
+      <label class="frm_labels" id="lbl-lastname-edt">last name: </label>
+        <input type="text" id="npt-user-lastName" value="" placeholder="last name">
       <input class="frm_submit_btn" id="frm-user-submit" type="submit" value="update">
       <input class="frm_cancel_btn" id="frm-user-cancel" type="button" value="cancel" onclick="cancelUserForm();">
-    </form>
   </div>
   <div id="dv-error-message"></div>
+  </div>
+  </form>
 </body>
 </html>

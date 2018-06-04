@@ -40,10 +40,11 @@ let showError = function(message) {
   } else {
     errormsg.innerHTML = message;
   }
+  errormsg.style.display = "block";
 };
 
 let validatePassword = function(pass,pass2) {
-  if (pass.length < 8 ) { return "too_short"; }
+  if (pass.length < 8 ) { return "Password is too short"; }
   let spaces = new RegExp(/\s/);
   let lower = new RegExp(/[a-z]/);
   let upper = new RegExp(/[A-Z]/);

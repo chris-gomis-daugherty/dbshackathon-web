@@ -6,25 +6,26 @@
   <script src="javascript/user.js"></script>
   <script src="javascript/util.js"></script>
 </head>
-<body>
-  <div id="dv-header">
-    <div id="dv-tagline">Something here</div>
-    <div id="dv-logout"></div>
+<body onload="startLoginPage()">
+  <form name="login" id="frm-login">
+  <div class="aGrid" id="login-page">
+    <div class="aGrid" id="dv-header">
+      <div id="dv-tagline">vanilla javascript historia</div>
+      <div id="dv-register">
+        <a id="a-register" href="register.html">register</a>
+      </div>
+    </div>
+    <div id="div-error-message"></div>
+    <div class="aGrid" id="dv-form-login">
+        <label class="frm_labels" id="lbl-username">username: </label><input class="frm_inptText" id="npt-username" type="text" placeholder="email">
+        <label class="frm_labels" id="lbl-password">password: </label><input class="frm_passField" id="npt-password" type="password" placeholder="password">
+        <input class="frm_submit_btn" id="frm-login-submit" type="submit" value="login">
+        <input class="frm_reset_btn" id="frm-login-reset" type="reset" value="reset">
+    </div>
+    <div id="dv-forgot">
+      <a id="a-forgot" href="">forgot password</a>
+    </div>
   </div>
-  <div id="dv-form">
-    <form onsubmit="doLogin();return false;" name="login" id="frm-login">
-      <label class="frm_labels" id="lbl_username">username: </label><input class="frm_inptText" id="username" type="text" placeholder="email" value="test@email.com">
-      <label class="frm_labels" id="lbl_password">password: </label><input class="frm_passField" id="password" type="password" placeholder="password" value="password">
-      <input class="frm_submit_btn" id="frm_submit" type="submit" value="login">
-      <input class="frm_reset_btn" id="frm_reset" type="reset" value="reset">
-    </form>
-  </div>
-  <div id="dv-forgot">
-    <a id="a-forgot" href="">forgot password</a>
-  </div>
-
-  <div id="dv-register">
-    <a id="a-register" href="register.html">register</a>
-  </div>
+</form>
 </body>
 </html>

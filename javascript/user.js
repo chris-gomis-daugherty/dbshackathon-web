@@ -29,9 +29,8 @@ let User = (function() {
     },
     clbkRegisterUser: function(response) {
       if (response.name == "error") {
-        let elem = document.getElementById("dv-form");
         let msg = "Error registering user.  error code " + response.code + ": " + response.detail;
-        showError(msg, elem);
+        showError(msg);
         return false;
       } else if (typeof response.id == 'number') {
         storeUser(response);
@@ -68,6 +67,11 @@ let User = (function() {
   return theUser;
 })();
 
+let startLoginPage = function() {
+  let submitBtn = document.getElementById("frm-login-submit");
+  submitBtn.addEventListener("click", doLogin);
+}
+
 let storeUser = function(response) {
   sessionStorage.setItem("userId", response.id);
   sessionStorage.setItem("userEmail", response.email);
@@ -77,23 +81,25 @@ let storeUser = function(response) {
   sessionStorage.setItem("userFullName", fullName);
 };
 
-function doLogin() {
+function doLogin(event) {
   console.log("doing login");
-  let name = document.getElementById("username").value;
-  let pass = document.getElementById("password").value;
+  let name = document.getElementById("npt-username").value;
+  let pass = document.getElementById("npt-password").value;
   let loginUser = new User(name);
   loginUser.login(pass);
+  event.preventDefault();
+  return false;
 }
 
 function doRegister() {
   console.log("doing register");
-  let elem = document.getElementById("dv-form");
+  let elem = document.getElementById("dv-reg-form");
 
-  let firstName = document.getElementById("firstName").value;
-  let lastName = document.getElementById("lastName").value;
-  let email = document.getElementById("username").value;
-  let pass = document.getElementById("password").value;
-  let pass2 = document.getElementById("rpt-password").value;
+  let firstName = document.getElementById("npt-reg-firstName").value;
+  let lastName = document.getElementById("npt-reg-lastName").value;
+  let email = document.getElementById("npt-reg-username").value;
+  let pass = document.getElementById("npt-reg-password").value;
+  let pass2 = document.getElementById("rpt-reg-password").value;
 
   if (firstName.length == 0 || firstName == "") {
     showError("First name cannot be blank.", elem); return false;
@@ -132,7 +138,7 @@ let clbkGetUserInfo = function(response,status) {
     let userId = user.id;
     fillUserInfo(user);
     if (userId == g_loggedInUserId) {
-      let elemUserUpdate = document.getElementById("dv-user-update");
+      let elemUserUpdate = document.getElementById("a-user-update");
       elemUserUpdate.style.visibility = 'visible';
     }
   } else {
@@ -155,10 +161,11 @@ let updateLinkClick = function(event) {
   nptUserLastName.value = elemUserLastName.innerHTML;
 
   let dvUserForm = document.getElementById("dv-user-form");
-  dvUserForm.style.display = "block";
+  dvUserForm.style.display = "grid";
   let dvUserInfo = document.getElementById("dv-user-info");
   dvUserInfo.style.display = "none";
-
+  let aUpdateLink = document.getElementById("a-user-update");
+  aUpdateLink.style.display = "none";
   event.preventDefault();
   return false;
 }
@@ -184,7 +191,9 @@ let cancelUserForm = function() {
   let userForm = document.getElementById("frm-user-update");
   userForm.reset();
   dvUserForm.style.display = "none";
-  dvUserInfo.style.display = "block";
+  dvUserInfo.style.display = "grid";
+  let aUpdateLink = document.getElementById("a-user-update");
+  aUpdateLink.style.display = "grid";
 }
 
 let fillUserInfo = function(user) {
