@@ -62,17 +62,6 @@ let validateEmail = function(email) {
     return re.test(String(email).toLowerCase());
 };
 
-let logout = function() {
-  let userID = sessionStorage.getItem("userId");
-  let headers = { "USER_ID": userID };
-  callServer("GET","logout",headers,"",clbkLogout);
-};
-let clbkLogout = function(response) {
-  console.log(response);
-  sessionStorage.clear();
-  window.location.href = "/jsathon";
-};
-
 let createElem = function(data, tag, appendTo, attributes) {
   let elem = document.createElement(tag);
   elem.innerHTML = data;

@@ -3,7 +3,8 @@
   <meta charset="utf-8">
   <title>The Site</title>
   <link rel="stylesheet" href="css/main.css">
-  <script src="javascript/user.js"></script>
+  <script src="javascript/userObj.js"></script>
+  <script src="javascript/indexCntrlr.js"></script>
   <script src="javascript/util.js"></script>
 </head>
 <body onload="startLoginPage()">
@@ -19,8 +20,8 @@
     <div class="aGrid" id="dv-form-login">
         <label class="frm_labels" id="lbl-username">username: </label><input class="frm_inptText" id="npt-username" type="text" placeholder="email">
         <label class="frm_labels" id="lbl-password">password: </label><input class="frm_passField" id="npt-password" type="password" placeholder="password">
-        <input class="frm_submit_btn" id="frm-login-submit" type="submit" value="login">
-        <input class="frm_reset_btn" id="frm-login-reset" type="reset" value="reset">
+        <input class="smlCntr" id="frm-login-submit" type="submit" value="login">
+        <input class="smlCntr" id="frm-login-reset" type="reset" value="reset">
     </div>
     <div id="dv-forgot">
       <a id="a-forgot" href="">forgot password</a>

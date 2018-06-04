@@ -1,46 +1,7 @@
-/* Listing Object */
-let Listing = (function() {
-  let listingProto = {
-    getListings: function(userID) {
-      let header = { "USER_ID": userID };
-      callServer("GET","topics",header,"",this.clbkGetListings);
-    },
-    clbkGetListings: function(data) {
-      let i; let loopLen = data.length;
-      let divList = document.getElementById('dv-listings');
-      for(i = 0; i < loopLen; i++) { addListing(data[i],divList); }
-    },
-    prepNewListing: function() {
-      // create blank boxes to fill with save button
-      console.log("making empty topic boxes");
-    },
-    createNewListing: function() {
-      // validate topic values
-      // if error display interval
-      // send ajax create request
-      return "Goodbye, " + this.name;
-    },
-    clbkCreateListing: function() {
-      // if successful replace entry boxes with topic standard topic row
-    }
-  };
-
-  function theListing(id, name, description, votes) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.votes = votes;
-  };
-  theListing.prototype = listingProto;
-
-  return theListing;
-})();
-/* end listing object */
-
+/* listing controller */
 let theList = new Listing();
 
-/* view controller related js */
-function startListingPage() {
+let startListingPage = function() {
   console.log("starting listpage, user: " + g_loggedInUserId);
   theList.getListings(g_loggedInUserId);
   let cancelBtn = document.getElementById("frm-listing-cancel");
@@ -49,7 +10,7 @@ function startListingPage() {
   submitBtn.addEventListener("click", doNewListing);
 }
 
-function addListing(data,elem) {
+let addListing = function(data,elem) {
   let lDiv = document.createElement('div');
   lDiv.setAttribute("class", "dv-topic");
   let attr = { "class": "spn_topic_id" };
@@ -67,17 +28,17 @@ function addListing(data,elem) {
   elem.append(lDiv);
 }
 
-function doNewListing(event) {
-  let topicName = document.getElementById('npt-topic-name').value;
+let doNewListing = function(event) {
+  let topicName = document.getElementById('npt-list-topic-name').value;
   let topicDesc = document.getElementById('npt-topic-desc').value;
   let newTopic = new Topic(0, topicName, topicDesc, 0);
   let userID = sessionStorage.getItem("userId");
-  newTopic.createTopic(userID, finishCreateListing);
+  newTopic.createTopic(userID, clbkNewListing);
   event.preventDefault();
   return false;
 }
 
-function finishCreateListing(response,resCode) {
+let clbkNewListing = function(response,resCode) {
   if (resCode == 200 && typeof response.id == 'number') {
     let returnedTopic = new Topic().objectLoad(response);
     let divList = document.getElementById('dv-listings');
@@ -85,20 +46,20 @@ function finishCreateListing(response,resCode) {
     cancelNewListingForm();
   } else {
     let elem = document.getElementById("dv-new-listing");
-    showError("Error creating topic.", elem);
+    showError("Error creating topic.");
     console.log(response);
     return false;
   }
 }
 
-function showNewListingForm() {
+let showNewListingForm = function() {
   let newListingDiv = document.getElementById('dv-new-listing');
   let createLink = document.getElementById('dv-listing-create');
   createLink.style.visibility = "hidden";
   newListingDiv.style.visibility = "visible";
 }
 
-function cancelNewListingForm() {
+let cancelNewListingForm = function() {
   let newListingDiv = document.getElementById('dv-new-listing');
   let createLink = document.getElementById('dv-listing-create');
   let newTopicForm = document.getElementById('frm-new-listing');

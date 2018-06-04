@@ -1,4 +1,3 @@
-
 let Comment = (function() {
   let CommentProto = {
     objectLoad: function(data) {

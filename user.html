@@ -4,7 +4,8 @@
   <title>user</title>
   <link rel="stylesheet" href="css/main.css">
   <script src="javascript/authenticate.js"></script>
-  <script src="javascript/user.js"></script>
+  <script src="javascript/userObj.js"></script>
+  <script src="javascript/userCntrlr.js"></script>
   <script src="javascript/util.js"></script>
 </head>
 <body onload="startUserPage();">
@@ -19,7 +20,7 @@
     <label class="frm_labels" id="lbl-email-dsp">email: </label><div class="can_update" id="dv-user-email"></div>
     <label class="frm_labels" id="lbl-firstname-dsp">first name: </label><div class="can_update" id="dv-user-firstName"></div>
     <label class="frm_labels" id="lbl-lastname-dsp">last name: </label><div class="can_update" id="dv-user-lastName"></div>
-    <a href="" id="a-user-update">update</a>
+    <a href="" class="flatButtons" id="a-user-update">edit</a>
   </div>
   <div class="aGrid" id="dv-user-form">
       <label class="frm_labels" id="lbl-email-edt">email: </label>
@@ -28,8 +29,8 @@
         <input type="text" id="npt-user-firstName" value="" placeholder="first name">
       <label class="frm_labels" id="lbl-lastname-edt">last name: </label>
         <input type="text" id="npt-user-lastName" value="" placeholder="last name">
-      <input class="frm_submit_btn" id="frm-user-submit" type="submit" value="update">
-      <input class="frm_cancel_btn" id="frm-user-cancel" type="button" value="cancel" onclick="cancelUserForm();">
+      <input class="smlCntr" id="frm-user-submit" type="submit" value="update">
+      <input class="smlCntr" id="frm-user-cancel" type="button" value="cancel" onclick="cancelUserForm();">
   </div>
   <div id="dv-error-message"></div>
   </div>

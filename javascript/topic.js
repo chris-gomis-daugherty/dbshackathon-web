@@ -1,72 +1,12 @@
-/* Topic Object */
-
-let Topic = (function() {
-  let topicProto = {
-    getTopic: function(userID) {
-      //action, url, payload, callback
-      console.log("calling get comment");
-      let header = { "USER_ID": userID };
-      callServer("GET","topics/"+this.id,header,"", this.clbkGetTopic);
-    },
-    clbkGetTopic: function(response) {
-      console.log(response);
-      // if error...
-      // success
-      pageTopic.objectLoad(response);
-      setupTopic(pageTopic);
-    },
-    createTopic: function(userID, callback) {
-      let header = { "USER_ID": userID };
-      let payload = JSON.stringify({ "name": this.name, "description": this.description });
-      callServer("POST","topics",header,payload, callback);
-    },
-    clbkCreateTopic: function(response) {
-      console.log(response);
-      //on success
-      //create new line item and turn off form
-    },
-    commentStuff: function() {
-      return "Goodbye, " + this.firstName;
-    },
-    objectLoad: function(data) {
-      this.id = data.id;
-      this.name = data.name;
-      this.description = data.description;
-      this.votes = data.votes;
-      let loadComments = data.comments;
-      let theComments = [];
-      for (details in loadComments) {
-        let aComment = new Comment();
-        aComment.objectLoad(loadComments[details]);
-        theComments.push(aComment);
-      }
-      this.comments = theComments;
-      return (this);
-    }
-  };
-
-  function theTopic(id, name, description, votes, comments) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.votes = votes;
-    this.userId;
-    this.comments = [];
-  };
-  theTopic.prototype = topicProto;
-
-  return theTopic;
-})();
-/* end Topic Object */
-
+/* Topic controller */
 let pageTopic;
-let submitEvent;
+let submitComment;
 var g_commenters = {};
 var g_commenter_cnt;
 var g_commenter_received = 0;
 let commenterIdList = [];
 
-function startTopicPage() {
+let startTopicPage = function() {
   let userID = sessionStorage.getItem("userId");
   console.log("starting topic page, user: "+ userID);
   let url = new URL(window.location.href);
@@ -75,19 +15,23 @@ function startTopicPage() {
   pageTopic.getTopic(userID);
   let submitBtn = document.getElementById("frm-comment-submit");
   submitBtn.addEventListener("click", doNewComment);
-  submitEvent = "new";
+  submitComment = "new";
 
-  if (pageTopic.userId == g_loggedInUserId) {
+  //  there is no user id associated with topics
+  //  if (pageTopic.userId == g_loggedInUserId) {
     let topicFooter = document.getElementById("dv-topic-footer");
-    let attr = { "href": "topiccrud.html", "class": "edit_link" };
-    createElem("Edit Topic", "a", topicFooter, attr);
-    attr = { "href": "", "class": "delete_link" };
-    createElem("Delete Topic", "a", topicFooter, attr);
-    let editLink = document.getElementById("a-edit-topic-message");
-    editLink.addEventListener("click", doEditTopic);
-    editLink.style.display = 'block';
-  }
-}
+    let attr = { "href": "topiccrud.html", "class": "flatButtons", "id": "a-update-link" };
+    let editLink = createElem("update", "a", topicFooter, attr);
+    attr = { "href": "", "class": "flatButtons", "id": "a-delete-link" };
+    let deleteLink = createElem("delete", "a", topicFooter, attr);
+    editLink.addEventListener("click", prepUpdateTopic);
+    deleteLink.addEventListener("click", deleteTopic);
+    let topicSubmit = document.getElementById("frm-topic-submit");
+    topicSubmit.addEventListener("click", updateTopic);
+    let topicCancel = document.getElementById("frm-topic-cancel");
+    topicCancel.addEventListener("click", cancelUpdateTopic);
+  //}
+};
 
 let addComment = function(comment,elem, userName) {
   let lDiv = document.createElement('div');
@@ -100,8 +44,8 @@ let addComment = function(comment,elem, userName) {
   nameElem.addEventListener("click", goToUserPage);
   let tempUserID = comment.userId.toString();
   commenterIdList = arrayPushIfUnique(commenterIdList, tempUserID );
-
-  createElem(comment.id, "span", lDiv);
+  attr = { "class": "comment_id" };
+  createElem(comment.id, "span", lDiv, attr);
   let comElem = createElem(comment.message, "div", lDiv, {"class":"dv_comment"});
   comElem.id = "comment-id-"+comment.id;
 
@@ -109,10 +53,10 @@ let addComment = function(comment,elem, userName) {
   if (comment.userId == g_loggedInUserId) {
     let attr = {"class": "dv_update_delete"};
     let divElem = createElem("", "div", lDiv, attr);
-    attr = { "href": "", "class": "spn_update_link", "data-id": comment.id };
+    attr = { "href": "", "class": "spn_update_link flatButtons", "data-id": comment.id };
     let updElem = createElem("update", "a", divElem, attr);
     updElem.addEventListener("click", prepUpdateComment);
-    attr = { "href": "", "class": "spn_delete_link", "data-id": comment.id };
+    attr = { "href": "", "class": "spn_delete_link flatButtons", "data-id": comment.id };
     let delElem = createElem("delete", "a", divElem, attr);
     delElem.addEventListener("click", deleteComment);
   }
@@ -139,14 +83,88 @@ let setupTopic = function(topic) {
   supplyUserInfo(commenterIdList);
 };
 
-function showNewCommentForm() {
+let cancelUpdateTopic = function(event) {
+  let editDiv = document.getElementById("dv-edit-topic");
+  editDiv.style.display = "none";
+  let title = document.getElementById("dv-topic-title");
+  let description = document.getElementById("dv-topic-desc");
+  let frmTitle = document.getElementById("npt-topic-name")
+  let frmDesc = document.getElementById("ta-topic-description");
+  title.innerHTML = frmTitle.value;
+  description.innerHTML = frmDesc.innerHTML;
+  let topicDiv = document.getElementById("dv-topic");
+  topicDiv.style.display = "grid";
+  event.preventDefault();
+  return false;
+};
+
+let prepUpdateTopic = function(event) {
+  let topicDiv = document.getElementById("dv-topic");
+  topicDiv.style.display = "none";
+  let title = document.getElementById("dv-topic-title");
+  let description = document.getElementById("dv-topic-desc");
+  let frmTitle = document.getElementById("npt-topic-name")
+  let frmDesc = document.getElementById("ta-topic-description");
+  frmTitle.value = title.innerHTML;
+  frmDesc.innerHTML = description.innerHTML;
+  let editDiv = document.getElementById("dv-edit-topic");
+  editDiv.style.display = "grid";
+  event.preventDefault();
+  return false;
+};
+
+let updateTopic = function(event) {
+  let id = pageTopic.id;
+  let name = document.getElementById("npt-topic-name").value;
+  let descTextArea = document.getElementById("ta-topic-description");
+  let description = descTextArea.value;
+  Topic.prototype.staticUpdateTopic(id, g_loggedInUserId, name, description, clbkUpdateTopic);
+  event.preventDefault();
+  return false;
+};
+
+let clbkUpdateTopic = function(response, status) {
+  if (status == 200 && typeof response.id == "number") {
+    let titleDiv = document.getElementById("dv-topic-title");
+    let descDiv = document.getElementById("dv-topic-desc");
+    let voteDiv = document.getElementById("dv-topic-vote");
+    titleDiv.innerHTML = response.name;
+    descDiv.innerHTML = response.description;
+    voteDiv.innerHTML = response.votes;
+    let topicDiv = document.getElementById("dv-topic");
+    topicDiv.style.display = "grid";
+    let editDiv = document.getElementById("dv-edit-topic");
+    editDiv.style.display = "none";
+  } else {
+    showError("Error updating topic: "+ response);
+  }
+};
+
+let deleteTopic = function(event) {
+  let id = pageTopic.id;
+  Topic.prototype.staticDeleteTopic(id, g_loggedInUserId, clbkDeleteTopic);
+  event.preventDefault()
+  return false;
+};
+
+let clbkDeleteTopic = function(response, status) {
+  if (status == 200 && response.message == "Topic Successfully Deleted") {
+    console.log("Topic deleted")
+    window.location.href="listing.html";
+  } else {
+    showError("Error deleting topic: "+ response);
+  }
+};
+
+/* comment functions */
+let showNewCommentForm = function() {
   let newCommentBox = document.getElementById('dv-new-comment');
   let createLink = document.getElementById('dv-comment-create');
   createLink.style.visibility = "hidden";
-  newCommentBox.style.visibility = "visible";
-}
+  newCommentBox.style.display = "grid";
+};
 
-function cancelNewCommentForm() {
+let cancelNewCommentForm = function() {
   let newCommentBox = document.getElementById('dv-new-comment');
   let createLink = document.getElementById('dv-comment-create');
   let newCommentForm = document.getElementById('frm-new-comment');
@@ -156,24 +174,30 @@ function cancelNewCommentForm() {
   submitBtn.value = "create";
   commentMessage.innerHTML = "";
   createLink.style.visibility = "visible";
-  newCommentBox.style.visibility = "hidden";
-  if (submitEvent !== "new") {
+  newCommentBox.style.display = "none";
+
+  if (submitComment !== "new") {
+
+    let hiddenCommentId = sessionStorage.getItem("hiddenCommentForUpdate");
+    let updateComment = document.getElementById(hiddenCommentId);
+    updateComment.style.display = "grid";
+
     submitBtn.addEventListener("click", doNewComment);
     submitBtn.removeEventListener("click", updateComment);
-    submitEvent = "new";
+    submitComment = "new";
   }
-}
+};
 
-function doNewComment(event) {
+let doNewComment = function(event) {
   let commentMessage = document.getElementById('npt-comment').value;
   let userID = sessionStorage.getItem("userId");
   let newComment = new Comment(0, pageTopic.id, userID ,commentMessage);
   newComment.createComment(clbkCreateComment);
   event.preventDefault();
   return false;
-}
+};
 
-function clbkCreateComment(response,status) {
+let clbkCreateComment = function(response,status) {
   if (status == 200 && typeof response.id == 'number') {
     let returnedComment = new Comment();
     returnedComment.objectLoad(response);
@@ -187,27 +211,33 @@ function clbkCreateComment(response,status) {
     console.log(response);
     return false;
   }
-}
+};
 
-function prepUpdateComment(event) {
+let prepUpdateComment = function(event) {
   let obj = event.target || event.srcElement;
   let id = obj.getAttribute("data-id");
+  let dvCommentGrid = document.getElementById("dv-comment-id-"+id);
+  sessionStorage.setItem("hiddenCommentForUpdate", "dv-comment-id-"+id)
+  let commentEditGrid = document.getElementById("dv-new-comment");
   let commentElem = document.getElementById("comment-id-"+id);
   let commentBox = document.getElementById("npt-comment");
   commentBox.innerHTML = commentElem.innerHTML;
   let submitBtn = document.getElementById("frm-comment-submit");
   submitBtn.value = "update";
-  if (submitEvent === "new") {
+  if (submitComment === "new") {
     submitBtn.removeEventListener("click", doNewComment);
     submitBtn.addEventListener("click", updateComment);
-    submitEvent = "update";
+    submitComment = "update";
   }
+  dvCommentGrid.parentNode.insertBefore(commentEditGrid,dvCommentGrid);
+  dvCommentGrid.style.display = "none";
+  commentEditGrid.style.display = "grid";
   sessionStorage.setItem("commentUpdateId",id);
   showNewCommentForm();
   event.preventDefault();
   return false;
-}
-function updateComment(event) {
+};
+let updateComment = function(event) {
   let id = sessionStorage.getItem("commentUpdateId")
   let userId = sessionStorage.getItem("userId");
   let topicId = pageTopic.id;
@@ -215,8 +245,8 @@ function updateComment(event) {
   Comment.prototype.staticUpdateComment(id, userId, topicId, message, clbkUpdateComment)
   event.preventDefault();
   return false;
-}
-function clbkUpdateComment(response, status) {
+};
+let clbkUpdateComment = function(response, status) {
   if (status == 200 && typeof response.id == 'number') {
     let commentId = sessionStorage.getItem("commentUpdateId");
     let elem = document.getElementById("comment-id-"+commentId);
@@ -224,14 +254,13 @@ function clbkUpdateComment(response, status) {
     sessionStorage.removeItem("commentUpdateId");
     cancelNewCommentForm();
   } else {
-    // show error
-    console.log("error in updating.");
+    showError("Error updating comment: " + response);
   }
   event.preventDefault();
   return false;
-}
+};
 
-function deleteComment(event) {
+let deleteComment = function(event) {
   let obj = event.target || event.srcElement;
   let id = obj.getAttribute("data-id");
   let userId = sessionStorage.getItem("userId");
@@ -239,8 +268,8 @@ function deleteComment(event) {
   Comment.prototype.staticDeleteComment(id, userId, clbkDeleteComment)
   event.preventDefault();
   return false;
-}
-function clbkDeleteComment(response, status) {
+};
+let clbkDeleteComment = function(response, status) {
   if (status == 200) {
     if (response.message == "Comment Successfully Deleted") {
       let commentId = sessionStorage.getItem("commentDeleteId");
@@ -249,11 +278,9 @@ function clbkDeleteComment(response, status) {
       sessionStorage.removeItem("commentDeleteId");
     }
   } else {
-    // show error
-    console.log("error in deleting.");
+    showError("Error deleting comment: " + response);
   }
-}
-
+};
 /* for user comments */
 let supplyUserInfo = function(userIdList) {
   g_commenter_cnt = userIdList.length;
@@ -273,8 +300,7 @@ let clbksupplyUserInfo = function(response, status) {
     g_commenter_received++;
     if ( g_commenter_received === g_commenter_cnt ) { finishedUserList(); }
   } else {
-    // error
-    console.log(response);
+    showError("Error getting commenters information: " + response);
   }
 };
 
@@ -287,10 +313,10 @@ let finishedUserList = function() {
     let userId = elem.getAttribute("data-user-id").toString();
     elem.innerHTML = g_commenters[userId];
   }
-}
+};
 
 let goToUserPage = function(event) {
   let elem = event.target;
   let userId = elem.getAttribute("data-user-id");
   window.location.href = "user.html?userid=" +  userId;
-}
+};

@@ -6,9 +6,11 @@
   <link rel="stylesheet" href="css/main.css">
   <script src="javascript/authenticate.js"></script>
   <script src="javascript/util.js"></script>
+  <script src="javascript/topicObj.js"></script>
   <script src="javascript/topic.js"></script>
+  <script src="javascript/userObj.js"></script>
   <script src="javascript/user.js"></script>
-  <script src="javascript/comment.js"></script>
+  <script src="javascript/commentObj.js"></script>
   <script src="javascript/vote.js"></script>
 </head>
 <body onload="startTopicPage();">
@@ -18,27 +20,33 @@
       <div id="dv-tagline"><a href="listing.html">vanilla javascript historia</a></div>
       <div id="dv-logout"><a href="" id="a-logout" onclick="logout(); return false;">logout</a></div>
     </div>
+    <div id="div-error-message"></div>
     <div class="aGrid" id="dv-topic">
       <div id="dv-topic-title"></div>
       <div id="dv-topic-vote"></div>
       <a href="" class="voteBtn" id="a-topic-vote-btn">+</a>
       <div class="dv_topic_desc" id="dv-topic-desc"></div>
+      <div class="aGrid" id="dv-topic-footer"></div>
     </div>
-    <a href="" id="a-edit-topic-message">Edit</a>
     <div class="aGrid" id="dv-edit-topic">
-      <textarea id="ta-topic-message" rows="3" cols="60"></textarea>
-      <input class="frm_submit_btn" id="frm-topic-submit" type="submit" value="update">
-      <input class="frm_cancel_btn" id="frm-topic-cancel" type="button" value="cancel" onclick="cancelUpdateTopic();">
+      <label class="frm_labels" id="lbl-topic-name">Topic: </label>
+      <input class="frm_inptText" id="npt-topic-name" type="text" placeholder="topic title">
+      <label class="frm_labels" id="lbl-topic-description">Description: </label>
+      <textarea id="ta-topic-description" rows="3" cols="60"></textarea>
+      <div class="aGrid" id="dv_edit_footer_btns">
+        <input class="flatButtons" id="frm-topic-submit" type="submit" value="update">
+        <input class="flatButtons" id="frm-topic-cancel" type="button" value="cancel">
+      </div>
     </div>
     <div id="dv-comments-header">Comments</div>
     <div id="dv-comment-box"></div>
     <div id="dv-comment-create">
-      <a href="" onclick="showNewCommentForm();return false;">Create Comments</a>
+      <a href="" class="flatButtons" onclick="showNewCommentForm();return false;">Create Comments</a>
     </div>
     <div class="aGrid" id="dv-new-comment">
       <textarea class="frm_inptTextArea" id="npt-comment" placeholder="comment" rows="3" cols="60"></textarea>
-      <input class="frm_submit_btn" id="frm-comment-submit" type="submit" value="create">
-      <input class="frm_cancel_btn" id="frm-comment-cancel" type="button" value="cancel" onclick="cancelNewCommentForm();">
+      <input class="smlCntr" id="frm-comment-submit" type="submit" value="create">
+      <input class="smlCntr" id="frm-comment-cancel" type="button" value="cancel" onclick="cancelNewCommentForm();">
     </div>
     <div id="dv-comments-footer"></div>
   </div>
