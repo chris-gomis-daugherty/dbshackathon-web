@@ -176,7 +176,7 @@ let cancelNewCommentForm = function(event) {
     updateCommentElem.style.display = "grid";
     submitBtn.removeEventListener("click", updateComment, false);
     submitBtn.addEventListener("click", doNewComment, false);
-    let commentFooterElem = document.getElementById("dv-comments-footer");    
+    let commentFooterElem = document.getElementById("dv-comments-footer");
     commentFooterElem.parentNode.insertBefore(newCommentBox, commentFooterElem);
     submitComment = "new";
   }
@@ -209,6 +209,12 @@ let clbkCreateComment = function(response,status) {
 };
 
 let prepUpdateComment = function(event) {
+  // if an update box is already open, then redisplay previous un-updated comment
+  let commentUpdateIdInSession = sessionStorage.getItem("hiddenCommentForUpdate")
+  if(submitComment === "update" && commentUpdateIdInSession) {
+    let prevCommentBox = document.getElementById(commentUpdateIdInSession);
+    prevCommentBox.style.display = "grid";
+  }
   let obj = event.target || event.srcElement;
   let id = obj.getAttribute("data-id");
   let dvCommentGrid = document.getElementById("dv-comment-id-"+id);
