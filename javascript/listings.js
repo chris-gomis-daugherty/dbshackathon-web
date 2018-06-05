@@ -2,11 +2,17 @@
 let theList = new Listing();
 
 let startListingPage = function() {
-  theList.getListings(g_loggedInUserId);
+  theList.getListings(g_loggedInUserId, clbkGetListings);
   let cancelBtn = document.getElementById("frm-listing-cancel");
   cancelBtn.addEventListener("click",  cancelNewListingForm);
   let submitBtn = document.getElementById("frm-listing-submit");
   submitBtn.addEventListener("click", doNewListing);
+}
+
+let clbkGetListings = function(data) {
+  let i; let loopLen = data.length;
+  let divList = document.getElementById('dv-listings');
+  for(i = 0; i < loopLen; i++) { addListing(data[i],divList); }
 }
 
 let addListing = function(data,elem) {
@@ -54,7 +60,7 @@ let showNewListingForm = function() {
   let newListingDiv = document.getElementById('dv-new-listing');
   let createLink = document.getElementById('dv-listing-create');
   createLink.style.visibility = "hidden";
-  newListingDiv.style.visibility = "visible";
+  newListingDiv.style.display = "grid";
 }
 
 let cancelNewListingForm = function() {
@@ -63,5 +69,5 @@ let cancelNewListingForm = function() {
   let newTopicForm = document.getElementById('frm-new-listing');
   newTopicForm.reset();
   createLink.style.visibility = "visible";
-  newListingDiv.style.visibility = "hidden";
+  newListingDiv.style.display = "none";
 }

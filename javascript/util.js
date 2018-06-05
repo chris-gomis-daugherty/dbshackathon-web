@@ -6,18 +6,24 @@ let callServer = function(action, url, headers, payload, callback) {
   let response;
 
   jsonhttp.onreadystatechange = function() {
-    if (this.readyState == XMLHttpRequest.DONE) {
-      if (this.status == 200 || this.status == 400) {
+    if(this.readyState == XMLHttpRequest.DONE) {
+      if ( this.status == 200) {
         response = JSON.parse(this.responseText);
         callback(response,this.status);
       } else {
-        let errorStr = "status: " + this.status + " error: " + this.responseText;
+        let errorStr = "status: " + this.status + " error: " + this.statusText;
         console.log(errorStr);
-        showError(errorStr);
+        callback(this.statusText,this.status);
       }
     }
   };
+  jsonhttp.onerror = function(e) {
+    console.log("internal xhr request error: " + e);
+    showError(e);
+  };
+
   jsonhttp.open(action, sendurl, true);
+
   if (action == ("POST") || action == ("PUT")) {
     jsonhttp.setRequestHeader("Content-Type", "application/json");
   }
@@ -36,11 +42,12 @@ let showError = function(message) {
   if (!errormsg) {
     let attr = { "id": "div-error-message" }
     let errormsg = document.createElem("message","div","body",attr);
-    errormsg.innerHTML = message;
-  } else {
-    errormsg.innerHTML = message;
   }
+  errormsg.classList.remove("runFadeAnimation");
+  errormsg.style.opacity = window.getComputedStyle(errormsg).opacity;
+  errormsg.innerHTML = message;
   errormsg.style.display = "block";
+  errormsg.classList.add("runFadeAnimation");
 };
 
 let validatePassword = function(pass,pass2) {

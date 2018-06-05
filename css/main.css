@@ -4,7 +4,17 @@ body {
   color: #6e0000;
   margin: 2em;
 }
-label { font-size: 0.8em; }
+label {
+  font-size: 0.8em;
+  padding: 0.25em;
+}
+input[type=text], input[type=password], textarea {
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #888888;
+  padding: 0.25em;
+}
 .errorMsg {
   padding: 1px 5px;
   background-color: lightgreen;
@@ -20,10 +30,6 @@ label { font-size: 0.8em; }
   grid-area: 1 / 4;
   place-self: center;
 }
-.smlCntr {
-  width: 5em;
-  place-self: center;
-}
 .flatButtons {
   width: 5em;
   font-size: 0.75em;
@@ -36,6 +42,27 @@ label { font-size: 0.8em; }
   text-align: center;
   text-decoration: none;
 }
+#div-error-message {
+  background-color:#ff7777;
+  padding: 5px 5px 5px 10px;
+  color: #000000;
+  text-shadow: -1px 1px #999999;
+  border-radius: 5px;
+}
+.runFadeAnimation {
+  animation: withfadeout 7s ease-in;
+  -webkit-animation: withfadeout 7s ease-in;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+@keyframes withfadeout {
+  from {opacity: 1;}
+  to {opacity: 0;}
+}
+@-webkit-keyframes withfadeout {
+  from {opacity: 1;}
+  to {opacity: 0;}
+}
 #dv-header { margin-bottom: 1em; }
 #dv-header { height: 20px; }
 #dv-tagline { float: left; }
@@ -44,10 +71,10 @@ label { font-size: 0.8em; }
   clear: both;
   margin-top: 10px;
 }
-#dv-new-listing, #a-user-update, #a-forgot {
+#a-user-update, #a-forgot {
   visibility: hidden;
 }
-#div-error-message, #dv-edit-topic, #dv-user-form, #dv-new-comment {
+#dv-new-listing, #div-error-message, #dv-edit-topic, #dv-user-form, #dv-new-comment {
   display: none;
 }
 .frm_labels {
@@ -68,7 +95,7 @@ label { font-size: 0.8em; }
   text-align: right;
 }
 /* login page only */
-#login-page{ grid-template-rows: 2em 1fr 1fr; }
+#login-page{ grid-template-rows: 2em 1fr auto; }
 #dv-form-login{
   grid-area: 2 / 1;
   display: grid;
@@ -87,7 +114,7 @@ label { font-size: 0.8em; }
 }
 /* listing page */
 #listing-page {
-  grid-template-rows: 2em 1em auto 2em 1fr;
+  grid-template-rows: 2em 1em auto 1em auto;
 }
 #dv-listing-header {
   grid-template-columns: 1fr 1fr;
@@ -99,8 +126,10 @@ label { font-size: 0.8em; }
 #dv-listing-create {
   grid-column: 2;
   text-align: right;
+  margin-right: 60px;
 }
 #dv-new-listing {
+  margin: 0px 20px;
   grid-template-columns: 25% auto 10%;
 }
 #npt-list-topic-name { grid-area: 1 / 1; }

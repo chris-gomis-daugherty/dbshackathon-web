@@ -10,7 +10,7 @@ let User = (function() {
         storeUser(response);
         window.location.href = "listing.html";
       } else {
-        showError("Error logging in: " + response);
+        showError("Error logging in: status " + status + " " + response);
         return false;
       }
     },
