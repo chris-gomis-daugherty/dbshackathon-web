@@ -2,7 +2,6 @@
 let theList = new Listing();
 
 let startListingPage = function() {
-  console.log("starting listpage, user: " + g_loggedInUserId);
   theList.getListings(g_loggedInUserId);
   let cancelBtn = document.getElementById("frm-listing-cancel");
   cancelBtn.addEventListener("click",  cancelNewListingForm);
@@ -46,8 +45,7 @@ let clbkNewListing = function(response,resCode) {
     cancelNewListingForm();
   } else {
     let elem = document.getElementById("dv-new-listing");
-    showError("Error creating topic.");
-    console.log(response);
+    showError("Error creating topic." + response);
     return false;
   }
 }

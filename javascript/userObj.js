@@ -10,8 +10,7 @@ let User = (function() {
         storeUser(response);
         window.location.href = "listing.html";
       } else {
-        let elem = document.getElementById("dv-form");
-        showError("User not found", elem);
+        showError("Error logging in: " + response);
         return false;
       }
     },
@@ -20,7 +19,12 @@ let User = (function() {
       callServer("GET","logout",headers,"", this.clbkLogout);
     },
     clbkLogout: function(response) {
-      console.log(response);
+      if (status == 200) {
+        sessionStorage.clear();
+        window.location.href = "/jsathon";
+      } else {
+        showError("Error logging out: " + response);
+      }
     },
     registerUser: function(password) {
       let loadObj = {"email": this.email, "password": password, "first_name": this.firstName,	"last_name": this.lastName };

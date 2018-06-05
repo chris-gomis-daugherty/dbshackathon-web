@@ -1,6 +1,5 @@
 /* User Controller */
 let doRegister = function() {
-  console.log("doing register");
   let elem = document.getElementById("dv-reg-form");
 
   let firstName = document.getElementById("npt-reg-firstName").value;

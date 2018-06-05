@@ -8,15 +8,15 @@ let commenterIdList = [];
 
 let startTopicPage = function() {
   let userID = sessionStorage.getItem("userId");
-  console.log("starting topic page, user: "+ userID);
   let url = new URL(window.location.href);
   let topicID = url.searchParams.get("topicid");
   pageTopic = new Topic(topicID);
   pageTopic.getTopic(userID);
   let submitBtn = document.getElementById("frm-comment-submit");
-  submitBtn.addEventListener("click", doNewComment);
+  submitBtn.addEventListener("click", doNewComment, false);
+  let cancelBtn = document.getElementById("frm-comment-cancel");
+  cancelBtn.addEventListener("click", cancelNewCommentForm)
   submitComment = "new";
-
   //  there is no user id associated with topics
   //  if (pageTopic.userId == g_loggedInUserId) {
     let topicFooter = document.getElementById("dv-topic-footer");
@@ -64,7 +64,6 @@ let addComment = function(comment,elem, userName) {
 };
 
 let setupTopic = function(topic) {
-  console.log("made callback");
   let titleDiv = document.getElementById('dv-topic-title');
   let voteDiv = document.getElementById('dv-topic-vote');
   let voteBtn = document.getElementById("a-topic-vote-btn");
@@ -86,12 +85,10 @@ let setupTopic = function(topic) {
 let cancelUpdateTopic = function(event) {
   let editDiv = document.getElementById("dv-edit-topic");
   editDiv.style.display = "none";
-  let title = document.getElementById("dv-topic-title");
-  let description = document.getElementById("dv-topic-desc");
   let frmTitle = document.getElementById("npt-topic-name")
   let frmDesc = document.getElementById("ta-topic-description");
-  title.innerHTML = frmTitle.value;
-  description.innerHTML = frmDesc.innerHTML;
+  frmTitle.value = "";
+  frmDesc.innerHTML = "";
   let topicDiv = document.getElementById("dv-topic");
   topicDiv.style.display = "grid";
   event.preventDefault();
@@ -122,7 +119,6 @@ let updateTopic = function(event) {
   event.preventDefault();
   return false;
 };
-
 let clbkUpdateTopic = function(response, status) {
   if (status == 200 && typeof response.id == "number") {
     let titleDiv = document.getElementById("dv-topic-title");
@@ -146,10 +142,8 @@ let deleteTopic = function(event) {
   event.preventDefault()
   return false;
 };
-
 let clbkDeleteTopic = function(response, status) {
   if (status == 200 && response.message == "Topic Successfully Deleted") {
-    console.log("Topic deleted")
     window.location.href="listing.html";
   } else {
     showError("Error deleting topic: "+ response);
@@ -164,7 +158,7 @@ let showNewCommentForm = function() {
   newCommentBox.style.display = "grid";
 };
 
-let cancelNewCommentForm = function() {
+let cancelNewCommentForm = function(event) {
   let newCommentBox = document.getElementById('dv-new-comment');
   let createLink = document.getElementById('dv-comment-create');
   let newCommentForm = document.getElementById('frm-new-comment');
@@ -177,15 +171,17 @@ let cancelNewCommentForm = function() {
   newCommentBox.style.display = "none";
 
   if (submitComment !== "new") {
-
     let hiddenCommentId = sessionStorage.getItem("hiddenCommentForUpdate");
-    let updateComment = document.getElementById(hiddenCommentId);
-    updateComment.style.display = "grid";
-
-    submitBtn.addEventListener("click", doNewComment);
-    submitBtn.removeEventListener("click", updateComment);
+    let updateCommentElem = document.getElementById(hiddenCommentId);
+    updateCommentElem.style.display = "grid";
+    submitBtn.removeEventListener("click", updateComment, false);
+    submitBtn.addEventListener("click", doNewComment, false);
+    let commentFooterElem = document.getElementById("dv-comments-footer");    
+    commentFooterElem.parentNode.insertBefore(newCommentBox, commentFooterElem);
     submitComment = "new";
   }
+  if(event) { event.preventDefault(); }
+  return false;
 };
 
 let doNewComment = function(event) {
@@ -207,8 +203,7 @@ let clbkCreateComment = function(response,status) {
     cancelNewCommentForm();
   } else {
     let elem = document.getElementById("dv-new-comment");
-    showError("Error creating comment.", elem);
-    console.log(response);
+    showError("Error creating comment." + response);
     return false;
   }
 };
@@ -225,8 +220,8 @@ let prepUpdateComment = function(event) {
   let submitBtn = document.getElementById("frm-comment-submit");
   submitBtn.value = "update";
   if (submitComment === "new") {
-    submitBtn.removeEventListener("click", doNewComment);
-    submitBtn.addEventListener("click", updateComment);
+    submitBtn.removeEventListener("click", doNewComment, false);
+    submitBtn.addEventListener("click", updateComment, false);
     submitComment = "update";
   }
   dvCommentGrid.parentNode.insertBefore(commentEditGrid,dvCommentGrid);

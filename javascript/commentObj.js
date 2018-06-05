@@ -1,7 +1,6 @@
 let Comment = (function() {
   let CommentProto = {
     objectLoad: function(data) {
-      console.log("in load");
       this.id = data.id;
       this.topicId = data.topic_id;
       this.userId = data.user_id;

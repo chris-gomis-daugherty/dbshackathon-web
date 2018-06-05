@@ -2,27 +2,28 @@
 let Topic = (function() {
   let topicProto = {
     getTopic: function(userID) {
-      //action, url, payload, callback
-      console.log("calling get comment");
       let header = { "USER_ID": userID };
       callServer("GET","topics/"+this.id,header,"", this.clbkGetTopic);
     },
-    clbkGetTopic: function(response) {
-      console.log(response);
-      // if error...
-      // success
-      pageTopic.objectLoad(response);
-      setupTopic(pageTopic);
+    clbkGetTopic: function(response,status) {
+      if (status == 200 && typeof response.id == "number") {
+        pageTopic.objectLoad(response);
+        setupTopic(pageTopic);
+      } else {
+        showError("Error deleting comment: " + response);
+      }
     },
     createTopic: function(userId, callback) {
       let header = { "USER_ID": userId };
       let payload = JSON.stringify({ "name": this.name, "description": this.description });
-      callServer("POST","topics",header,payload, callback);
+      callServer("POST","topics",header, payload, callback);
     },
     clbkCreateTopic: function(response) {
-      console.log(response);
-      //on success
-      //create new line item and turn off form
+      if (status == 200 && typeof response.id == "number") {
+        
+      } else {
+        showError("Error creating topic: " + response);
+      }
     },
     staticUpdateTopic: function(id, userId, name, description, callback) {
       let header = { "USER_ID": userId };

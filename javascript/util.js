@@ -11,11 +11,12 @@ let callServer = function(action, url, headers, payload, callback) {
         response = JSON.parse(this.responseText);
         callback(response,this.status);
       } else {
-        console.log("status: " + this.status + " error: " + this.responseText);
+        let errorStr = "status: " + this.status + " error: " + this.responseText;
+        console.log(errorStr);
+        showError(errorStr);
       }
     }
   };
-
   jsonhttp.open(action, sendurl, true);
   if (action == ("POST") || action == ("PUT")) {
     jsonhttp.setRequestHeader("Content-Type", "application/json");
@@ -28,7 +29,6 @@ let callServer = function(action, url, headers, payload, callback) {
     }
   }
   jsonhttp.send(payload);
-
 };
 
 let showError = function(message) {

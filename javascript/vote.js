@@ -1,9 +1,7 @@
 let submitVote = function(event) {
-
   let mainURL = new URL(window.location.href);
   let page = mainURL.pathname.substr(9,5);
   let callback;
-  console.log(page);
   if (page == "listi") {
     callback = clbkVoteListPage;
   } else if (page == "topic" ) {
@@ -17,17 +15,18 @@ let submitVote = function(event) {
   callServer("GET",url,header,"",callback);
   event.preventDefault();
   return false;
-}
+};
 
 let clbkVoteListPage = function(response, status) {
   if (status == 200 &&  typeof response.votes == "number") {
     let topicId = sessionStorage.getItem("voteId");
     let elemToUpdate = document.getElementById("listing-vote-topic-"+topicId);
     elemToUpdate.innerHTML = response.votes;
+  } else {
+    showError("Error casting vote: " + response);
   }
-  console.log(response);
   sessionStorage.removeItem("voteId");
-}
+};
 
 let clbkVoteTopicPage = function(response, status) {
   if (status == 200 &&  typeof response.votes == "number") {
@@ -36,7 +35,8 @@ let clbkVoteTopicPage = function(response, status) {
       let voteDiv = document.getElementById('dv-topic-vote');
       voteDiv.innerHTML = response.votes;
     }
+  } else {
+    showError("Error casting vote: " + response);
   }
-  console.log(response);
   sessionStorage.removeItem("voteId");
 }
